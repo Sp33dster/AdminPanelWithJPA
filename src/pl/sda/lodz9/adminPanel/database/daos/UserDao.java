@@ -10,12 +10,16 @@ import java.sql.SQLException;
 
 public class UserDao {
 
-    public User getUserByLogin(String login) {
-        Connection connection = DatabaseConnector.getConection();
+    public static User getUserByLogin(String login) {
+
 
         String query = "SELECT * from user where login = ?";
         User user = null;
-        try {
+        try (Connection connection = DatabaseConnector.getConection()){
+if(connection == null){
+    System.out.println("connection never exist");
+}
+
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, login);
             ResultSet rs = preparedStatement.executeQuery();
@@ -29,14 +33,14 @@ public class UserDao {
         return user;
     }
 
-    private User createUserFromResultSet(ResultSet rs) throws SQLException {
+    private static User createUserFromResultSet(ResultSet rs) throws SQLException {
 
         User user = new User();
 
         while ((rs.next())) {
             user.setId(rs.getInt("id"));
             user.setLogin(rs.getString("login"));
-            user.setPasswordHash(rs.getString("password"));
+            user.setPassword(rs.getString("password"));
             user.setName(rs.getString("name"));
             user.setSurname(rs.getString("surname"));
             user.setIsAdmin(rs.getInt("isAdmin"));
