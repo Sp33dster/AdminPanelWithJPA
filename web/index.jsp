@@ -6,6 +6,7 @@
   </head>
   <body>
   <a href="login.jsp">login</a>
-  <a href="serverList.jsp">ServerList</a>
+  <a href="registration.jsp">Registration</a>
+
   </body>
 </html>

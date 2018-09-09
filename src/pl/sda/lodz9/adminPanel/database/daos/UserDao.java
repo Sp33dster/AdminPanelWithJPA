@@ -48,4 +48,26 @@ if(connection == null){
         return user;
 
     }
+
+    public static boolean saveUser(User user){
+    boolean execute = false;
+        try (Connection connection = DatabaseConnector.getConection()){
+            PreparedStatement ps = connection.prepareStatement("insert into user(id, name, surname, login, password, isAdmin) " +
+                    "values (null, ?, ?, ?, ?, 0)");
+             ps.setString(1,user.getName());
+             ps.setString(2,user.getSurname());
+             ps.setString(3,user.getLogin());
+             ps.setString(4,user.getPassword());
+
+             execute = ps.execute();
+
+            System.out.println(execute);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return execute;
+    }
+
+
 }

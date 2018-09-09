@@ -23,22 +23,25 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         User userByLogin = UserDao.getUserByLogin(user);
-        if (userByLogin == null){
-
+        if (userByLogin.getLogin() == null){
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.jsp");
             writer.println("<font color = red> Użytkownik o podanym adresie email nie istnieje. </font>");
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.jsp");
+
             requestDispatcher.include(request,response);
+            return;
         }
+
         if (!userByLogin.getPassword().equals(password)){
-            writer.println("<font color = red> Hasło nieprawidłowe. </font>");
             RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login.jsp");
+            writer.println("<font color = red> Hasło nieprawidłowe. </font>");
+
             requestDispatcher.include(request,response);
+        } else {
+
+            session.setAttribute("user", userByLogin.getLogin());
+            session.setMaxInactiveInterval(15 * 60);
+            response.sendRedirect("/serverList.jsp");
         }
-
-        session.setAttribute("user",userByLogin.getLogin());
-        session.setMaxInactiveInterval(15*60);
-        response.sendRedirect("/serverList.jsp");
-
     }
 
 
